@@ -1,6 +1,6 @@
 # Data and Scripts for Reproducing Evaluation Data
 
-This repository contains data and scripts for reproducing the evaluation data used in [大村ら2023](https://www.anlp.jp/proceedings/annual_meeting/2023/pdf_dir/D11-2.pdf).
+This repository contains data and scripts for reproducing the evaluation data used in [[大村ら2023]](https://www.anlp.jp/proceedings/annual_meeting/2023/pdf_dir/D11-2.pdf).
 
 ### Requirements
 
