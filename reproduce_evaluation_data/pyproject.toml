@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "reproduce_evaluation_data"
+version = "0.1.0"
+description = "data and scripts for reproducing evaluation data"
+authors = ["Kazumasa Omura <omura@nlp.i.kyoto-u.ac.jp>"]
+
+packages = [
+    { include = "*.py", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+pandas = "^1.5.0"
+pdfminer-six = "^20221105"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
