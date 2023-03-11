@@ -1,3 +1,5 @@
-pdf
+__pycache__/
+
+pdf/
 annotated_data.tsv
-dataset
+dataset/
