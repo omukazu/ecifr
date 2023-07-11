@@ -5,7 +5,7 @@ description = "data and scripts for reproducing evaluation data"
 authors = ["Kazumasa Omura <omura@nlp.i.kyoto-u.ac.jp>"]
 
 packages = [
-    { include = "*.py", from = "src" }
+    { include = "first_party_modules", from = "src" }
 ]
 
 [tool.poetry.dependencies]
