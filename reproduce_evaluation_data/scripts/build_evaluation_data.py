@@ -6,15 +6,32 @@ from pathlib import Path
 
 import pandas as pd
 
+EXPECTED_STATS = {
+    "dev": {
+        "num_examples": 632,
+        "num_positive_causality": 252,
+        "num_negative_causality": 380,
+        "num_positive_polarity": 188,
+        "num_negative_polarity": 49,
+    },
+    "test": {
+        "num_examples": 3411,
+        "num_positive_causality": 1331,
+        "num_negative_causality": 2080,
+        "num_positive_polarity": 910,
+        "num_negative_polarity": 351,
+    },
+}
+
 
 @dataclass
 class Example:
     doc_id: str
     stock_code: str
     sentence: str
-    label: str
-    prime: str
+    causality: str
     polarity: str
+    importance: str
 
 
 def split_documents(master_df: pd.DataFrame) -> tuple[list[str], list[str]]:
@@ -68,12 +85,13 @@ def get_dev_and_test_splits(
     for (
         doc_id,
         target,
-        label1,
-        label2,
-        label3,
-        label4,
-        prime,
+        segment,
+        causality1,
+        causality2,
+        causality3,
+        causality4,
         polarity,
+        importance,
         sentence,
     ) in annotated_df.values:
         if target in {"target", "0"}:
@@ -81,20 +99,41 @@ def get_dev_and_test_splits(
 
         sentence = sentence.translate(str.maketrans("*+", "＊＋"))
 
-        majority, num_votes = Counter([label1, label2, label3, label4]).most_common()[0]
-        label = majority if num_votes >= 3 else ""
+        majority, num_votes = Counter([causality1, causality2, causality3, causality4]).most_common()[0]
+        causality = majority if num_votes >= 3 else ""
 
         example = Example(
             doc_id=doc_id,
             stock_code=doc_id2stock_code[doc_id + ".pdf"],
             sentence=sentence,
-            label=causality_map[label],
-            prime=prime,
+            causality=causality_map[causality],
             polarity=polarity_map[polarity],
+            importance=importance,
         )
         switch = dev if doc_id + ".pdf" in dev_doc_ids else test
         switch.append(example)
     return dev, test
+
+
+def save_examples(output_path: Path, examples: list[Example]) -> None:
+    with output_path.open(mode="w") as f:
+        for example in examples:
+            f.write(json.dumps(asdict(example), ensure_ascii=False) + "\n")
+
+
+def get_stats(examples: list[Example]) -> dict[str, int]:
+    ctr = defaultdict(int)
+    for example in examples:
+        ctr[example.causality] += 1
+        if example.causality == "正例":
+            ctr[example.polarity] += 1
+    return {
+        "num_examples": len(examples),
+        "num_positive_causality": ctr["正例"],
+        "num_negative_causality": ctr["負例"],
+        "num_positive_polarity": ctr["+"],
+        "num_negative_polarity": ctr["-"],
+    }
 
 
 def main():
@@ -107,12 +146,13 @@ def main():
     columns = [
         "doc_id",
         "target",
-        "label1",
-        "label2",
-        "label3",
-        "label4",
-        "prime",
+        "segment",
+        "causality1",
+        "causality2",
+        "causality3",
+        "causality4",
         "polarity",
+        "importance",
         "sentence",
     ]
     annotated_df = pd.read_csv(args.ANNOTATED_DATA, sep="\t", usecols=columns)
@@ -126,15 +166,15 @@ def main():
 
     dev_doc_ids, test_doc_ids = split_documents(master_df)
     dev, test = get_dev_and_test_splits(annotated_df, doc_id2stock_code, dev_doc_ids)
+    dataset = {"dev": dev, "test": test}
 
     out_dir = Path(args.OUT_DIR)
     out_dir.mkdir(exist_ok=True)
-    with open(out_dir.joinpath("dev.jsonl"), mode="w") as f:
-        for example in dev:
-            f.write(json.dumps(asdict(example), ensure_ascii=False) + "\n")
-    with open(out_dir.joinpath("test.jsonl"), mode="w") as f:
-        for example in test:
-            f.write(json.dumps(asdict(example), ensure_ascii=False) + "\n")
+    for stem, examples in dataset.items():
+        save_examples(out_dir / f"{stem}.jsonl", examples)
+        for key, value in get_stats(examples).items():
+            if value != EXPECTED_STATS[stem][key]:
+                print(f"{stem}-{key} isn't reproduced ({value} vs {EXPECTED_STATS[stem][key]})")
 
 
 if __name__ == "__main__":

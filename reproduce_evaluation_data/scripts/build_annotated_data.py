@@ -4,8 +4,8 @@ from pathlib import Path
 from time import sleep
 
 import pandas as pd
-from scraping import extract_pages, get_qualitative_information, get_text
-from ssplit import ssplit
+from first_party_modules.scraping import extract_pages, get_qualitative_information, get_text
+from first_party_modules.ssplit import ssplit
 
 
 def main():
