@@ -15,38 +15,14 @@ ALTERNATIVE2PARENTHESIS = str.maketrans(
 )
 
 
-def ssplit(text, model="regex"):
-    """Split text into sentences.
-
-    Parameters
-    ----------
-    text : str
-        A input text to be split.
-    model : str
-        A model name (default: regex).
-
-    Returns
-    -------
-    list[str]
-    """
+def ssplit(text: str, model: str = "regex") -> list[str]:
     if model == "regex":
         return _ssplit_regex(text)
     else:
         raise NotImplementedError
 
 
-def _ssplit_regex(text):
-    """Split text into sentences by regular expressions.
-
-    Parameters
-    ----------
-    text : str
-        A input text to be split.
-
-    Returns
-    -------
-    list[str]
-    """
+def _ssplit_regex(text: str) -> list[str]:
     _balanced = _balance(text)
     _regex = re.compile("[^。]*。|[^。]*$")
     _sentence_candidates = []
@@ -56,18 +32,7 @@ def _ssplit_regex(text):
     return _clean_up_sentence_candidates(_sentence_candidates)
 
 
-def _balance(text):
-    """Balance text that contains unclosed parenthesis.
-
-    Parameters
-    ----------
-    text : str
-        A input text to be balanced.
-
-    Returns
-    -------
-    str
-    """
+def _balance(text: str) -> str:
     balanced = list(text)
     stack = {}
 
@@ -99,35 +64,13 @@ def _balance(text):
     return "".join(balanced)
 
 
-def _merge_sentence_candidates(sentence_candidates):
-    """Merge sentence candidates.
-
-    Parameters
-    ----------
-    sentence_candidates : list[str]
-        A list of sentence candidates.
-
-    Returns
-    -------
-    list[str]
-    """
+def _merge_sentence_candidates(sentence_candidates: list[str]) -> list[str]:
     sentence_candidates = _merge_single_periods(sentence_candidates)
     sentence_candidates = _merge_parenthesis(sentence_candidates)
     return sentence_candidates
 
 
-def _merge_single_periods(sentence_candidates):
-    """Merge sentence candidates that consist of a single period.
-
-    Parameters
-    ----------
-    sentence_candidates : list[str]
-        A list of sentence candidates.
-
-    Returns
-    -------
-    list[str]
-    """
+def _merge_single_periods(sentence_candidates: list[str]) -> list[str]:
     _regex = re.compile(r"^。$")
 
     merged_sentences = [""]
@@ -142,18 +85,7 @@ def _merge_single_periods(sentence_candidates):
     return merged_sentences
 
 
-def _merge_parenthesis(sentence_candidates):
-    """Merge sentence candidates so that they save strings in parentheses or brackets.
-
-    Parameters
-    ----------
-    sentence_candidates : list[str]
-        A list of sentence candidates.
-
-    Returns
-    -------
-    list[str]
-    """
+def _merge_parenthesis(sentence_candidates: list[str]) -> list[str]:
     parenthesis_level = 0
     quotation_level = 0
 
@@ -189,18 +121,7 @@ def _merge_parenthesis(sentence_candidates):
     return merged_sentences
 
 
-def _clean_up_sentence_candidates(sentence_candidates):
-    """Remove empty sentence candidates.
-
-    Parameters
-    ----------
-    sentence_candidates : list[str]
-        A list of sentence candidates.
-
-    Returns
-    -------
-    list[str]
-    """
+def _clean_up_sentence_candidates(sentence_candidates: list[str]) -> list[str]:
     return [
         sentence_candidate.translate(ALTERNATIVE2PARENTHESIS)
         for sentence_candidate in sentence_candidates
