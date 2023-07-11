@@ -11,7 +11,7 @@ This repository contains data and scripts for reproducing the evaluation data us
 ### Set up Python Virtual Environment
 
 ```shell
-# pip install poetry
+# pip install "poetry>=1.4,<1.5"
 poetry install
 ```
 
@@ -42,20 +42,20 @@ The format of evaluation data is JSON Lines.
   "doc_id": "00000009",
   "stock_code": "3777",
   "sentence": "...",
-  "label": "負例",
-  "prime": "",
-  "polarity": ""
+  "causality": "負例",
+  "polarity": "",
+  "importance": ""
 }
 ```
 
-| Key      | Type | Description                                                 |
-|----------|-----|-------------------------------------------------------------|
-| doc_id   | str | unique id for the financial results                         |
+| Key        | Type | Description                                                 |
+|------------|-----|-------------------------------------------------------------|
+| doc_id     | str | unique id for the financial results                         |
 | stock_code | str | stock code of a company that released the financial results |
-| sentence | str | raw text of the annotated sentence                          |
-| label    | str | whether the sentence is causal or not ("正例" or "負例")        |
-| prime    | str | whether the sentence is important or not ("1", "?", or "")  |
-| polarity | str | polarity of revenue/profit ("+", "-", "?", or "")           |
+| sentence   | str | raw text of the annotated sentence                          |
+| causality  | str | whether the sentence is causal or not ("正例" or "負例")        |
+| polarity   | str | polarity of revenue/profit ("+", "-", "?", or "")           |
+| importance | str | whether the sentence is important or not ("1", "?", or "")  |
 
 ### License
 This work is licensed under [a Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License](https://creativecommons.org/licenses/by-sa/4.0/).
