@@ -16,12 +16,12 @@ def main():
     args = parser.parse_args()
 
     annotation = pd.read_csv(args.ANNOTATION, sep="\t")
-    master_df = pd.read_csv(args.MASTER_DATA)
+    master_df = pd.read_csv(args.MASTER_DATA, usecols=["ignore", "stock_code", "url", "basename"])
     work_dir = Path("./pdf")
     work_dir.mkdir(exist_ok=True)
 
     sentences = []
-    for ignore, stock_code, url, basename in master_df[["ignore", "stock_code", "url", "basename"]].values:
+    for ignore, stock_code, url, basename in master_df.values:
         if ignore == 1:
             continue
 
@@ -34,7 +34,7 @@ def main():
         sections = get_qualitative_information(pages)
         for key, section in sections.items():
             text = get_text(section)
-            sentences.extend([sentence.strip() for sentence in ssplit(text) if sentence.strip()])
+            sentences.extend([s.strip() for s in ssplit(text) if s.strip()])
 
     annotation["sentence"] = sentences[1:]
     annotation.to_csv(args.OUT, sep="\t", index=False)

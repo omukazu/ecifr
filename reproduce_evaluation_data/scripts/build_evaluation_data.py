@@ -32,6 +32,7 @@ class Example:
     causality: str
     polarity: str
     importance: str
+    segment: int
 
 
 def split_documents(master_df: pd.DataFrame) -> tuple[list[str], list[str]]:
@@ -109,6 +110,7 @@ def get_dev_and_test_splits(
             causality=causality_map[causality],
             polarity=polarity_map[polarity],
             importance=importance,
+            segment=segment,
         )
         switch = dev if doc_id + ".pdf" in dev_doc_ids else test
         switch.append(example)

@@ -5,7 +5,7 @@ This repository contains data and scripts for reproducing the evaluation data us
 ### Requirements
 
 - Python: 3.9
-- Poetry: 1.2+
+- Poetry: >= 1.4
 - Dependencies: see pyproject.toml.
 
 ### Set up Python Virtual Environment
@@ -44,18 +44,20 @@ The format of evaluation data is JSON Lines.
   "sentence": "...",
   "causality": "負例",
   "polarity": "",
-  "importance": ""
+  "importance": "",
+  "segment": ""
 }
 ```
 
 | Key        | Type | Description                                                 |
-|------------|-----|-------------------------------------------------------------|
-| doc_id     | str | unique id for the financial results                         |
-| stock_code | str | stock code of a company that released the financial results |
-| sentence   | str | raw text of the annotated sentence                          |
-| causality  | str | whether the sentence is causal or not ("正例" or "負例")        |
-| polarity   | str | polarity of revenue/profit ("+", "-", "?", or "")           |
-| importance | str | whether the sentence is important or not ("1", "?", or "")  |
+|------------|------|-------------------------------------------------------------|
+| doc_id     | str  | unique id for the financial results                         |
+| stock_code | str  | stock code of a company that released the financial results |
+| sentence   | str  | raw text of the annotated sentence                          |
+| causality  | str  | whether the sentence is causal or not ("正例" or "負例")        |
+| polarity   | str  | polarity of revenue/profit ("+", "-", "?", or "")           |
+| importance | str  | whether the sentence is important or not ("1", "?", or "")  |
+| segment    | str  |                                                             |
 
 ### License
 This work is licensed under [a Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License](https://creativecommons.org/licenses/by-sa/4.0/).
