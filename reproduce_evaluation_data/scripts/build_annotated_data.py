@@ -4,7 +4,7 @@ from pathlib import Path
 from time import sleep
 
 import pandas as pd
-from first_party_modules.scraping import extract_pages, get_qualitative_information, get_text
+from first_party_modules.pdf import extract_pages, get_qualitative_information, get_text
 from first_party_modules.ssplit import ssplit
 
 
